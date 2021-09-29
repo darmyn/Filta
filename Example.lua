@@ -38,4 +38,7 @@ filta:NewEntry({
 
 print(filta:Search({
     "Tool"
-}, "ExactMatch"))
+})) --> No secondary argument representing `searchMethodName` was provided. This is because I am using the `Whitelist` search
+        -- method, which is the default method used when you call :Search(). If you read the comments at the top of 
+        -- Filta.lua you can learn how to change the default search method globally or locally to a specific filta object.
+
