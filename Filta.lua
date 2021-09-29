@@ -66,6 +66,7 @@ local Filta = {}
 Filta.__index = Filta
 
 function Filta.new()
+
     local self = setmetatable({}, Filta)
 
     self.DefaultSearchMethod = DEFAULT_SEARCH_METHOD --> allows users to change the default search method specifically for certain objects. Might save them time.
@@ -73,6 +74,7 @@ function Filta.new()
     self._uniqueSearchMethods = {}
 
     return self
+
 end
 
 function Filta:NewEntry(data: table, tags: table, callback)
@@ -90,6 +92,7 @@ function Filta:NewEntry(data: table, tags: table, callback)
         Tags = tags;
         Callback = callback;
     })
+    
 end
 function Filta:Search(tagsToSearchFor: table, searchMethodName: string)
 
