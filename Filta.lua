@@ -1,14 +1,14 @@
 --[[
 
     Written by darmantinjr / darmyn
-    Written on: September 28th, 2021 around 11PM -> September 29th, 2021 at 2:00 AM. (I know I'm slow)
+    Written on: September 28th, 2021 around 11PM -> September 29th, 2021 at 2:01 AM. (I know I'm slow)
 
     Why filta?
 
     Filta makes it easy to store data under tags. This allows you to make more precise searches.
 
     MAKE YOUR OWN SEARCH METHODS: Filta comes built in with some search methods. These are global search methods
-    inside of the "searchMethods" table on LINE 14. You can add search methods to this table to create global search methods
+    inside of the "searchMethods" table below. You can add search methods to this table to create global search methods
     that are accessible by all filta objects. You can also write custom search methods that are exclusive to
     one filta objects using :NewSearchMethod() on a filta object.
 
@@ -16,11 +16,23 @@
     default search method to a specific filter object as well by modifying the `DefaultSearchMethod` property of a filta object.
     This might save you typing time if a filta object is using the same search method more than others.
 
+        --> Filta:NewEntry(data: table, tags: table, callback: table)
+            -- Creates a new entry of data that can be searched for under the given tags. 
+            -- A callback can be assigned to execute code when an entry has been entered in the search results.
+            -- Why? I don't know, my tired brain told me to.
+
+        --> Filta:Search(tagsToSearchFor: table, searchMethod: string)
+            -- Searches for entries that relate to the tags that have been searched based on the result of the search method.
+        
+        --> Filta:NewSearchMethod(name:string, callback: function)
+            -- Assings a new search method locally to the filta object. This can be used when calling :Search().
+
 ]]
 
 local DEFAULT_SEARCH_METHOD = "Whitelist"
 
 local searchMethods = {
+
     Whitelist = function(tagsToSearchFor, entry)
         for _, tag in ipairs(tagsToSearchFor) do
             if table.find(entry.Tags, tag) then
@@ -28,6 +40,7 @@ local searchMethods = {
             end
         end
     end,
+
     Blacklist = function(tagsToSearchFor, entry)
         for _, tag in ipairs(tagsToSearchFor) do
             if not table.find(entry.Tags, tag) then
@@ -35,6 +48,7 @@ local searchMethods = {
             end
         end
     end,
+
     ExactMatch = function(tagsToSearchFor, entry)
         local isExactMatch = true
         for _, tag in ipairs(entry.Tags) do
@@ -45,6 +59,7 @@ local searchMethods = {
         end
         return isExactMatch
     end,
+    
 }
 
 local Filta = {}
@@ -61,6 +76,7 @@ function Filta.new()
 end
 
 function Filta:NewEntry(data: table, tags: table, callback)
+
     assert(data, "Missing argument @ position 1")
     assert(tags, "Missing argument @ position 2")
     assert(typeof(data) == "table", "Incorrect type of argument passed @ position 1. Expects `table`, and recieved `"..typeof(data).."`.")
@@ -68,6 +84,7 @@ function Filta:NewEntry(data: table, tags: table, callback)
     if callback then
         assert(typeof(callback) == "function", "Incorrect type of argumnet passed @ position 3. Expects `function`, and recieved `"..typeof(callback).."`.")
     end
+
     table.insert(self._entries, {
         Data = data;
         Tags = tags;
@@ -75,6 +92,7 @@ function Filta:NewEntry(data: table, tags: table, callback)
     })
 end
 function Filta:Search(tagsToSearchFor: table, searchMethodName: string)
+
     assert(tagsToSearchFor, "Missing argument @ position 1")
     assert(searchMethodName, "Missing argument @ position 2")
     assert(typeof(tagsToSearchFor) == "table" and #tagsToSearchFor > 0, "Incorrect type of argument passed @ position 1. Expectes `array`, and recieved another type, or possibly a table with no length. Type: "..typeof(tagsToSearchFor))
@@ -84,8 +102,8 @@ function Filta:Search(tagsToSearchFor: table, searchMethodName: string)
     searchMethodName = searchMethodName or self.DefaultSearchMethod --> "Whitelist" and "ExactMatch" and "Blacklist"
 
     local related = {}
-
     for _, entry in ipairs(self._entries) do
+
         local entryData = entry.Data
         local entryCallback = entry.Callback
         local searchMethod = self._uniqueSearchMethods[searchMethodName] or searchMethods[searchMethodName]
@@ -97,17 +115,22 @@ function Filta:Search(tagsToSearchFor: table, searchMethodName: string)
                 entryCallback(entryData)
             end
         end
+
     end
 
     return related
+
 end
 
 function Filta:NewSearchMethod(name: string, callback)
+
     assert(name, "Missing argument @ position 1.")
     assert(callback, "Missing argument @ position 2.")
     assert(typeof(name) == "string", "Incorrect type of argument passed @ position 1. Expects `string`, and recieved `"..typeof(name).."`.")
     assert(typeof(callback) == "function", "Incorrect type of argument passed @ position 2. Expects `function`, and recieved `"..typeof(callback).."`.")
+    
     self._uniqueSearchMethods[name] = callback
+
 end
 
 return Filta

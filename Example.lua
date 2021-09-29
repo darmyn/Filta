@@ -1,4 +1,5 @@
 local Filta = require(script.Parent.Filta)
+
 local filta = Filta.new()
 filta:NewEntry({
     Name = "SwiftAxe";
