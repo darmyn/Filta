@@ -1,5 +1,5 @@
 # Filta
-### "A more efficient way to search for data!".
+### "Search for data based on tags, rather than keys".
 
 Written by darmantinjr / darmyn
 Written on: September 28th, 2021 around 11PM -> September 29th, 2021 at 2:00 AM. (I know I'm slow)
