@@ -107,6 +107,7 @@ function Filta:NewSearchMethod(name: string, callback)
     assert(callback, "Missing argument @ position 2.")
     assert(typeof(name) == "string", "Incorrect type of argument passed @ position 1. Expects `string`, and recieved `"..typeof(name).."`.")
     assert(typeof(callback) == "function", "Incorrect type of argument passed @ position 2. Expects `function`, and recieved `"..typeof(callback).."`.")
+    self._uniqueSearchMethods[name] = callback
 end
 
 return Filta
